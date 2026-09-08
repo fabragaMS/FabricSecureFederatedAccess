@@ -129,6 +129,24 @@ Fabric separates management permissions from data permissions:
 - Apply semantic-model permissions and row-level or object-level security for Power BI consumption.
 - Validate the effective identity and security path for Direct Lake, DirectQuery, and Import modes.
 
+## Domain access to centrally governed data
+
+Domain-owned workspaces consume centrally governed data products without transferring ownership of the underlying data to the domain. The architecture supports several access patterns, selected according to the location, sensitivity, and consumption requirements of the data:
+
+| Access pattern | Description |
+|---|---|
+| **OneLake shortcuts** | The preferred pattern for sharing centrally managed Fabric data with domain workspaces. A domain creates a shortcut to an approved data product in the central platform workspace, allowing workloads such as lakehouses, notebooks, and semantic models to use the data without creating another physical copy. The central platform retains ownership of the source data and its lifecycle. |
+| **OneLake shortcuts with delegated access** | Where appropriate, the central platform can expose data through a shortcut that uses a delegated or fixed identity to access the target. This pattern is useful when consumers shouldn't require direct permissions on the underlying source. Access to the shortcut and the data exposed through it must still be governed according to the applicable OneLake security model. |
+| **Trusted workspace access** | For centrally governed data held in firewall-enabled Azure Storage, a Fabric workspace identity can be authorized through trusted workspace access. This pattern allows Fabric workloads to access protected storage without opening the storage account to general public network access. |
+| **Shared semantic models** | Domains that require governed analytical consumption rather than direct data access can consume centrally managed semantic models. This pattern centralizes business definitions, measures, and semantic security while allowing domain teams to create their own reports and analytical experiences. |
+| **SQL endpoints and governed query access** | Centrally managed lakehouses and warehouses can expose SQL interfaces to domain consumers. SQL permissions, roles, and row-, column-, or object-level security can restrict the data available to each consuming domain. |
+| **Pipelines and controlled replication** | Copy data into a domain workspace when the domain requires physical ownership of a derived data product, independent lifecycle management, workload isolation, or transformations that shouldn't affect the central product. Use this pattern deliberately because it introduces another governed copy of the data. |
+| **Cross-workspace Fabric access** | Fabric workloads can reference items across workspaces when the requesting user or workload identity has the required permissions. Use Microsoft Entra groups, workspace identities, item permissions, and OneLake security to govern these interactions rather than granting broad workspace roles. |
+
+The architecture should **prefer governed access over replication**. OneLake shortcuts and shared semantic models provide the primary mechanisms for domain teams to consume centrally governed products while preserving central ownership and reducing unnecessary copies. Physical replication through pipelines should be reserved for cases where **performance, isolation, transformation, resilience, or regulatory requirements** justify a separate copy.
+
+This model also preserves the Data Mesh principle of **federated ownership**: the central platform can own authoritative enterprise or shared data products, while domain teams independently combine those products with domain-owned data to create new products. Access is granted at the appropriate data or item layer rather than by making domain users Contributors or Members of the central platform workspace.
+
 ## Governance and data protection
 
 Use Fabric domains to group workspaces, delegate permitted settings, and improve discovery.
