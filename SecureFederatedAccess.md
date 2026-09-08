@@ -22,7 +22,7 @@ Use this architecture to:
 
 ## Architecture
 
-![Single-tenant Microsoft Fabric data mesh with central platform workspaces, domain-owned workspaces, OneLake, federated governance, identity controls, selective network isolation, and batch and real-time ingestion.](.\media\secure-data-mesh-single-tenant.png "Diagram of a Microsoft Fabric tenant with Microsoft Entra and Microsoft Purview controls across central platform workspaces and domain-owned workspaces. OneLake spans the workspaces. Public, Azure, on-premises, private, and streaming sources connect through Data Factory, mirroring, Eventstreams, gateways, trusted workspace access, or managed private endpoints. Most workspaces use public Fabric endpoints protected by Conditional Access. Selected restricted workspaces use IP firewall rules or workspace Private Link. Arrows show governed cross-domain access through OneLake shortcuts and shared semantic models.")
+![SecureFederatedAccessDataPlatform](./media/secure-data-mesh-single-tenant.png "Diagram of a Microsoft Fabric tenant with Microsoft Entra and Microsoft Purview controls across central platform workspaces and domain-owned workspaces. OneLake spans the workspaces. Public, Azure, on-premises, private, and streaming sources connect through Data Factory, mirroring, Eventstreams, gateways, trusted workspace access, or managed private endpoints. Most workspaces use public Fabric endpoints protected by Conditional Access. Selected restricted workspaces use IP firewall rules or workspace Private Link. Arrows show governed cross-domain access through OneLake shortcuts and shared semantic models.")
 
 | # | Control | Description |
 |---|---|---|
