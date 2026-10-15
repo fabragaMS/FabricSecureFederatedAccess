@@ -22,12 +22,12 @@ Use this architecture to:
 
 ## Architecture
 
-![SecureFederatedAccessDataPlatform](./media/fabric-secure-federated-access.png "Diagram of a Microsoft Fabric tenant with Microsoft Entra and Microsoft Purview controls across central platform workspaces and domain-owned workspaces. OneLake spans the workspaces. Public, Azure, on-premises, private, and streaming sources connect through Data Factory, mirroring, Eventstreams, gateways, trusted workspace access, or managed private endpoints. Most workspaces use public Fabric endpoints protected by Conditional Access. Selected restricted workspaces use IP firewall rules or workspace Private Link. Arrows show governed cross-domain access through OneLake shortcuts and shared semantic models.")
+![SecureFederatedAccessDataPlatform](./media/fabric-secure-federated-access.png "Diagram that shows a Fabric tenant with central platform and domain workspaces, OneLake, and identity and network controls.")
 
 | # | Control | Description |
 |---|---|---|
-| **1** | **Microsoft Entra Conditional Access Policies** | Establishes the identity-first security perimeter for Fabric by evaluating users and groups, network location, trusted applications, device compliance, and other access signals before allowing authentication to Fabric. |
-| **2** | **Entra Conditional Access restrictions** | Restricts Fabric access to authorized users connecting from approved corporate networks, VPN egress points, compliant devices, and/or other trusted locations, while retaining Fabric public endpoints. |
+| **1** | **Microsoft Entra** | Establishes the identity-first security perimeter for Fabric by evaluating users and groups, network location, trusted applications, device compliance, and other access signals before allowing authentication to Fabric. |
+| **2** | **Microsoft Entra Conditional Access restrictions** | Restricts Fabric access to authorized users connecting from approved corporate networks, VPN egress points, compliant devices, and/or other trusted locations, while retaining Fabric public endpoints. |
 | **3** | **Workspace Private Link** | Provides private inbound connectivity to selected sensitive Fabric workspaces through Azure Private Link, allowing public endpoint access to be disabled where network-level isolation is required. |
 | **4** | **Data gateway** | Provides controlled connectivity from Fabric to data sources that aren't directly reachable from the Fabric service, including on-premises and private network data sources. |
 | **5** | **Workspace IP firewall** | Restricts inbound access to a Fabric workspace to approved public IP addresses or network ranges. It complements Conditional Access when explicit workspace-level network restrictions are required. |
@@ -43,7 +43,7 @@ The topology contains these layers:
 
 1. **Tenant foundation.** A single Microsoft Entra tenant provides the identity and access foundation for the Microsoft Fabric tenant. **Fabric tenant administrators** govern Fabric tenant settings, workload availability, sharing, administrative delegation, and tenant-level monitoring. **Microsoft Entra tenant administrators** govern identity and access controls, including Conditional Access, PIM, access reviews, Entitlement Management, security groups, and workload identities. Together, Entra administrators control **who can access Fabric and under what conditions**, while Fabric administrators control **what those identities can do within the Fabric service and how Fabric capabilities are governed and delegated.**
 
-2. **Capacity layer.** One or more Fabric capacities provide compute and establish region and billing boundaries. Start with shared capacities when workloads can tolerate shared consumption. Place critical, high-volume, or independently funded workloads on separate capacities when performance isolation, residency, or chargeback justifies the additional cost.A recommended placement is:
+2. **Capacity layer.** One or more Fabric capacities provide compute and establish region and billing boundaries. Start with shared capacities when workloads can tolerate shared consumption. Place critical, high-volume, or independently funded workloads on separate capacities when performance isolation, residency, or chargeback justifies the additional cost. A recommended placement is:
     * **Platform capacity** – Hosts centrally managed shared services such as common ingestion, shared reference data, governance, monitoring, and reusable platform assets.
     * **Domain production capacities** – Host production data products for one or more business domains. Group domains with compatible performance, security, residency, and business-criticality requirements, and dedicate capacities to high-volume or mission-critical domains where stronger isolation is required.
     * **Nonproduction capacity** – Hosts development and test workspaces across domains, separating engineering activity from production workloads.
