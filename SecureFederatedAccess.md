@@ -22,7 +22,7 @@ Use this architecture to:
 
 ## Architecture
 
-![SecureFederatedAccessDataPlatform](./media/secure-data-mesh-single-tenant.png "Diagram of a Microsoft Fabric tenant with Microsoft Entra and Microsoft Purview controls across central platform workspaces and domain-owned workspaces. OneLake spans the workspaces. Public, Azure, on-premises, private, and streaming sources connect through Data Factory, mirroring, Eventstreams, gateways, trusted workspace access, or managed private endpoints. Most workspaces use public Fabric endpoints protected by Conditional Access. Selected restricted workspaces use IP firewall rules or workspace Private Link. Arrows show governed cross-domain access through OneLake shortcuts and shared semantic models.")
+![SecureFederatedAccessDataPlatform](./media/fabric-secure-federated-access.png "Diagram of a Microsoft Fabric tenant with Microsoft Entra and Microsoft Purview controls across central platform workspaces and domain-owned workspaces. OneLake spans the workspaces. Public, Azure, on-premises, private, and streaming sources connect through Data Factory, mirroring, Eventstreams, gateways, trusted workspace access, or managed private endpoints. Most workspaces use public Fabric endpoints protected by Conditional Access. Selected restricted workspaces use IP firewall rules or workspace Private Link. Arrows show governed cross-domain access through OneLake shortcuts and shared semantic models.")
 
 | # | Control | Description |
 |---|---|---|
@@ -35,6 +35,7 @@ Use this architecture to:
 | **7** | **Managed virtual network and managed private endpoints** | Provides isolated outbound connectivity from supported Fabric workloads to Azure resources through private endpoints, without exposing those resources through public network paths. |
 | **8** | **Trusted workspace access** | Allows a Fabric workspace to securely access firewall-enabled Azure Storage by using the workspace identity and Azure resource-instance rules. This pattern can also support governed OneLake shortcuts to protected storage. |
 | **9** | **Workspace outbound access protection and connection controls** | Controls where Fabric workloads can send data by blocking outbound connectivity by default and allowing only approved destinations through mechanisms such as data connection rules and managed private endpoints. |
+| **10** | **Microsoft Entra tenant restrictions** | Prevents users on the corporate network from accessing unauthorized Fabric tenants with external accounts. Configure [tenant restrictions v2](https://learn.microsoft.com/entra/external-id/tenant-restrictions-v2) in Microsoft Entra cross-tenant access settings and add the tenant-restrictions signal through the corporate proxy so that Microsoft Entra ID allows access only to approved external tenants and applications. |
 
 ### Target topology
 
@@ -228,19 +229,27 @@ Enable the capacity disaster-recovery setting where supported and required. It r
 
 Maintain source replay, export, infrastructure definitions, deployment artifacts, and tested runbooks where platform recovery alone doesn't meet the objective.
 
+For comprehensive guidance on defining reliability goals, identifying failure modes, designing redundancy, and planning disaster recovery, see [Reliability considerations for Microsoft Fabric workloads](https://learn.microsoft.com/azure/well-architected/microsoft-fabric/reliability).
+
 ### Security
 
 Minimize privileged workspace roles, use groups, govern workload identities, classify data, monitor sharing, and apply controls at the correct layer.
 
 Revalidate the [Fabric security feature availability matrix](https://learn.microsoft.com/fabric/security/security-feature-availability) before deployment because support varies by item and feature.
 
+For comprehensive guidance on establishing a security baseline, designing isolation boundaries, applying identity-first controls, securing network communications, and hardening workload assets, see [Security considerations for Microsoft Fabric workloads](https://learn.microsoft.com/azure/well-architected/microsoft-fabric/security).
+
 ### Cost optimization
 
 Share capacities where utilization patterns are compatible.
 
+Pause and resume PAYG Fabric capacities whenever appropriate to avoid running costs when the capacity is not needed.
+
 Isolate workloads only when performance, residency, operational ownership, or chargeback requires it.
 
 Use shortcuts and mirroring where they reduce justified copies, monitor storage separately from compute, and use the Fabric Capacity Metrics app to detect throttling and inefficient consumption.
+
+For comprehensive guidance on identifying and modeling cost drivers, governing consumption, optimizing environments, and using automation to reduce costs, see [Cost considerations for Microsoft Fabric workloads](https://learn.microsoft.com/azure/well-architected/microsoft-fabric/cost-optimization).
 
 ### Operational excellence
 
@@ -261,6 +270,8 @@ Monitor:
 
 Keep identities, connections, ownership, classifications, and recovery instructions in the operational inventory.
 
+For comprehensive guidance on preparing teams, deploying changes safely, automating operations, monitoring environments, and planning incident response, see [Operational excellence for Microsoft Fabric workloads](https://learn.microsoft.com/azure/well-architected/microsoft-fabric/operational-excellence).
+
 ### Performance efficiency
 
 Place latency-sensitive or high-concurrency workloads on appropriately sized capacities.
@@ -268,6 +279,8 @@ Place latency-sensitive or high-concurrency workloads on appropriately sized cap
 Separate workloads with conflicting consumption profiles when shared capacity causes missed objectives.
 
 Optimize Delta tables, queries, semantic models, ingestion concurrency, and retention based on measured workload behavior rather than a fixed workspace-per-domain formula.
+
+For comprehensive guidance on capacity planning, scaling strategies, performance monitoring and testing, and workload optimization, see [Performance Efficiency for Microsoft Fabric workloads](https://learn.microsoft.com/azure/well-architected/microsoft-fabric/performance-efficiency).
 
 ## Regulated industries considerations
 
